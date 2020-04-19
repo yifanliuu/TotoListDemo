@@ -35,21 +35,21 @@
 <script lang="ts">
 import {Component, Prop, Vue, Watch, Emit} from 'vue-property-decorator';
 
-interface task_info {
+interface TaskInfo {
   name: string;
   description: string;
   deadline: number;
   labels: string[];
 }
-interface task_item {
+interface TaskItem {
   id: number;
-  info: task_info;
+  info: TaskInfo;
   status: boolean;
 }
 
 @Component
 export default class AddOrUpdate extends Vue {
-  private item: task_item;
+  private item: TaskItem;
   private dialogFormVisible: boolean;
   private pickerOptions1: boolean;
 
@@ -58,56 +58,55 @@ export default class AddOrUpdate extends Vue {
     this.dialogFormVisible = false;
     this.item = {
       id: -1,
-      info:{
+      info: {
         name: '',
         description: '',
         deadline: Date.now(),
-        labels: [""],
+        labels: [''],
       },
-      status: false  
+      status: false,
     };
   }
-  public get form(){
+  public get form() {
     return this.item.info;
   }
-  public init(item: task_item) :void{
-    if(item.id){
+  public init(item: TaskItem): void {
+    if (item.id) {
       this.item = item;
-    }
-    else{
+    } else {
       this.item = {
         id: -1,
-        info:{
+        info: {
           name: '',
           description: '',
           deadline: Date.now(),
-          labels: [""],
+          labels: [''],
         },
-        status: false
-      }
+        status: false,
+      };
     }
     this.dialogFormVisible = true;
   }
   /**
    * addOneLabel
    */
-  public addOneLabel() :void{
-    this.item.info.labels.push("");
+  public addOneLabel(): void {
+    this.item.info.labels.push('');
   }
   /**
    * deleteLabel
    */
-  public deleteLabel(index: number):void {
+  public deleteLabel(index: number): void {
       this.item.info.labels.splice(index, 1);
   }
   /**
    * confirmChange
    */
-  public confirmChange():void{
+  public confirmChange(): void {
     this.dialogFormVisible = false;
-    this.$emit("submitChange", this.item);
+    this.$emit('submitChange', this.item);
   }
-}
+} 
 </script>
 
 <style lang="scss">

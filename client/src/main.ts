@@ -8,7 +8,7 @@ import axios from 'axios';
 
 Vue.config.productionTip = false;
 Vue.prototype.$axios = axios;
-Vue.prototype.HOST='/api'
+Vue.prototype.HOST = '/api';
 Vue.use(ElementUI);
 
 new Vue({

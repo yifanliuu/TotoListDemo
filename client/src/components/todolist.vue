@@ -63,17 +63,16 @@
 <script lang="ts">
 import {Component, Prop, Vue, Watch, Emit} from 'vue-property-decorator';
 import AddOrUpdate from './addOrUpdate.vue';
-import { url } from 'inspector';
 
-interface Task_info {
+interface TaskInfo {
   name: string;
   description: string;
   deadline: number;
   labels: string[];
 }
-interface Task_item {
+interface TaskItem {
   id: number;
-  info: Task_info;
+  info: TaskInfo;
   status: boolean;
 }
 
@@ -81,7 +80,7 @@ interface Task_item {
   components: {AddOrUpdate},
 })
 export default class TodoList extends Vue {
-  private task_list: Task_item[];
+  private task_list: TaskItem[];
   private on_todo: boolean;
   private addOrUpdateVisible: boolean;
   private json_data: any;
@@ -91,11 +90,11 @@ export default class TodoList extends Vue {
     this.on_todo = true;
     this.addOrUpdateVisible = false;
   }
-  created() {
+  public created() {
     this.updateAllTask();
   }
-  public get getTodoList(): Task_item[] {
-    const todo_list: Task_item[] = [];
+  public get getTodoList(): TaskItem[] {
+    const todo_list: TaskItem[] = [];
     this.task_list.forEach((item) => {
       if (!item.status) {
         todo_list.push(item);
@@ -103,8 +102,8 @@ export default class TodoList extends Vue {
     });
     return todo_list;
   }
-  public get getDoneList(): Task_item[] {
-    const done_list: Task_item[] = [];
+  public get getDoneList(): TaskItem[] {
+    const done_list: TaskItem[] = [];
     this.task_list.forEach((item) => {
       if (item.status) {
         done_list.push(item);
@@ -113,7 +112,7 @@ export default class TodoList extends Vue {
     return done_list;
   }
 
-  public getTaskList(): Task_item[] {
+  public getTaskList(): TaskItem[] {
     if (this.on_todo) {
       return this.getTodoList;
     }
@@ -132,75 +131,74 @@ export default class TodoList extends Vue {
   /**
    * updateAllTask
    */
-  public updateAllTask():void {
+  public updateAllTask(): void {
     this.$axios.get('/api/todo/all')
             .then((res) => {
               this.task_list = [];
               this.json_data = res;
-              this.json_data.data.forEach(data_item => {
-                let info = JSON.parse(data_item.task_info);
-                let item :Task_item = {
+              this.json_data.data.forEach((data_item) => {
+                const info = JSON.parse(data_item.task_info);
+                const item: TaskItem = {
                   id : data_item.task_id,
-                  info : info,
+                  info,
                   status : data_item.task_status,
-                }
+                };
                 this.task_list.push(item);
               });
             })
-            .catch((err)=>{console.log(err)});  
+            .catch((err) => {console.log(err); });
   }
   public changeTaskStatus(id: number) {
-    let index: number = this.task_list.findIndex((item: Task_item) => (item.id == id));
-    this.$axios.put('/api/todo/status',{"task_id": this.task_list[index].id})
-              .then((res)=>{
-                if(res.status = 200){
+    const index: number = this.task_list.findIndex((item: TaskItem) => (item.id == id));
+    this.$axios.put('/api/todo/status', {task_id: this.task_list[index].id})
+              .then((res) => {
+                if (res.status = 200) {
                   this.task_list[index].status = !this.task_list[index].status;
                 }
               })
-              .catch((err)=>{console.log(err)});
+              .catch((err) => {console.log(err); });
   }
   public deleteTask(id: number) {
     this.$axios.delete(`/api/todo/${id}`)
-              .then((res)=>{
-                if(res.status = 200){
+              .then((res) => {
+                if (res.status = 200) {
                   this.updateAllTask();
                 }
               })
-              .catch((err)=>{console.log(err)});
+              .catch((err) => {console.log(err); });
   }
-  public addOrUpdateTaskToDatabase(item: Task_item) {
-    if(item.id < 0){
-      //add 
+  public addOrUpdateTaskToDatabase(item: TaskItem) {
+    if (item.id < 0) {
+      // add
       this.json_data = JSON.stringify(item.info);
-      this.$axios.post('/api/todo/create',{
-        "task_info": this.json_data,
-        "task_status": 0,
-      }).then((res)=>{
-          if(res.status = 200){
+      this.$axios.post('/api/todo/create', {
+        task_info: this.json_data,
+        task_status: 0,
+      }).then((res) => {
+          if (res.status = 200) {
             this.updateAllTask();
           }
         })
-        .catch((err)=>{console.log(err)});
-    }
-    else{
+        .catch((err) => {console.log(err); });
+    } else {
       // update
       this.json_data = JSON.stringify(item.info);
-      this.$axios.put('/api/todo/content',{
-        "task_id": item.id,
-        "task_info": this.json_data,
-      }).then((res)=>{
-          if(res.status = 200){
-            let update_index = this.task_list.findIndex((task)=>(task.id == item.id));
+      this.$axios.put('/api/todo/content', {
+        task_id: item.id,
+        task_info: this.json_data,
+      }).then((res) => {
+          if (res.status = 200) {
+            const update_index = this.task_list.findIndex((task) => (task.id == item.id));
             this.task_list[update_index].info = item.info;
           }
         })
-        .catch((err)=>{console.log(err)});
+        .catch((err) => {console.log(err); });
     }
     /*
       GET localhost:3000/todo/all
     */
   }
-  public addOrUpdateTaskInfo(item: Task_item) {
+  public addOrUpdateTaskInfo(item: TaskItem) {
     this.addOrUpdateVisible = true;
     this.$nextTick(() => {
       this.$refs.child.init(item);
