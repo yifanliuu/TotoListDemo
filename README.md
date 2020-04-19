@@ -21,6 +21,7 @@ npm i
 4. Run `npm start` command.
 
 **Make sure that the server is running on port 3000.**
+
 ---
 ### Run the client:
 1. Install dependencies.
@@ -31,11 +32,10 @@ npm i
 2. Open another terminal, run `npm run serve` command.
 ---
 ### Attentions
-- **1. If you are running your server on other port, you need to change configurations in `/client/vue.config.js` file:**
+- **1. If you are running your server on other ports, you need to change configurations in `/client/vue.config.js` file:**
 ```javascript
 proxy: {
   '/api': {
-    // 请求的目标主机
     target: 'http://localhost:your_server_port/',
     changeOrigin: true,
     ws: true,
@@ -45,4 +45,4 @@ proxy: {
   }
 }
 ```
-- **2. Make sure your MySQL support 中文, otherwise you cannot create any todos using 中文.**
+- **2. Make sure your MySQL supports 中文, otherwise you cannot create any todos using 中文.**
