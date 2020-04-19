@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter, { RouteConfig } from 'vue-router';
-import TodoList from '../views/todolist.vue';
+import TodoList from '../components/todolist.vue';
 
 Vue.use(VueRouter);
 
