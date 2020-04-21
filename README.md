@@ -26,7 +26,7 @@ npm i
 ### Run the client:
 1. Install dependencies.
 ```shell
-cd ./client
+cd ./myclient
 npm i
 ```
 2. Open another terminal, run `npm run dev` command.
